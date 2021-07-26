@@ -1,0 +1,9 @@
+# Ignore files in api directory
+node_modules
+npm-debug.log
+Dockerfile
+
+.gitignore
+.git
+.dockerignore
+.env
