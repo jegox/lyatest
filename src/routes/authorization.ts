@@ -1,19 +1,25 @@
 import { autoInjectable } from "tsyringe"
-import { Response, Controller, Post, Body, Delete } from '@decorators/express'
+import { Response, Controller, Post, Body, Delete, Headers } from '@decorators/express'
 
-import { IResponse } from '../commons/interfaces'
+import { ILogin, IResponse } from '../commons/interfaces'
 import { AuthenticationMiddleware } from '../middlewares'
+import { Validator } from "../commons/validator"
+import { UserService, UtilService } from "../services"
 
 @Controller('/authorization')
 @autoInjectable()
 export default class Authorization {
 
-  constructor() {}
+  constructor(
+    private userService: UserService,
+    private utilService: UtilService
+  ) {}
 
   @Post('/')
-  async login(@Body() body: any, @Response() res: IResponse) {
+  @Validator('loginSchema')
+  async login(@Body() body: ILogin, @Response() res: IResponse) {
     try {
-      const data: any = []
+      const data: any = await this.userService.authenticate(body)
       res.json({ status: true, data });
     } catch (error) {
       res.json({ status: false, message: error.message });
@@ -21,9 +27,9 @@ export default class Authorization {
   }
   
   @Delete('/', [AuthenticationMiddleware])
-  async logout(@Body() body: any, @Response() res: IResponse) {
+  async logout(@Headers('authorization') authorization: string, @Response() res: IResponse) {
     try {
-      const data: any = []
+      const data: any = await this.utilService.destroy(authorization.split(' ')[0])
       res.json({ status: true, data });
     } catch (error) {
       res.json({ status: false, message: error.message });

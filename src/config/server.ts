@@ -32,7 +32,7 @@ class Server {
     })
 
     attachControllers(this.router, await Promise.all(routers))
-    this.app.use('/api', this.router)
+    this.app.use('/', this.router)
 
     this.app.use('*', (req, res) => res.status(404).json({ status: false, message: `Route ${req.originalUrl} is not found` }))
     
