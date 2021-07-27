@@ -25,41 +25,53 @@ export default class User {
     }
   }
 
-  @Put('/:id')
+  @Put('/:id', [AuthenticationMiddleware])
   @Validator('idSchema', 'updateSchema')
   async update(@Params('id') id: string, @Body() body: IUserUpdate, @Response() res: IResponse) {
     try {
-      const data: any = [id]
-      res.json({ status: true, data });
+      const { nModified, ok } = await this.userService.update(id, body)
+      res.json({ 
+        status: true, 
+        data: !!nModified && !!ok
+      })
     } catch (error) {
       res.json({ status: false, message: error.message });
     }
   }
   
   @Delete('/:id', [AuthenticationMiddleware])
-  async remove(@Response() res: IResponse, @Params('id') id: string) {
+  @Validator('idSchema')
+  async remove(@Params('id') id: string, @Response() res: IResponse) {
     try {
-      const data: any = [id]
-      res.json({ status: true, data });
+      const { ok, deletedCount } = await this.userService.destroy(id)
+      res.json({ 
+        status: true, 
+        data: !!ok && !!deletedCount
+      });
     } catch (error) {
       res.json({ status: false, message: error.message });
     }
   }
   
   @Patch('/:id/active', [AuthenticationMiddleware])
-  async active(@Response() res: IResponse, @Params('id') id: string) {
+  @Validator('idSchema')
+  async active(@Params('id') id: string, @Response() res: IResponse) {
     try {
-      const data: any = [id]
-      res.json({ status: true, data });
+      const { nModified, ok } = await this.userService.update(id, { active: true })
+      res.json({ 
+        status: true, 
+        data: !!nModified && !!ok
+      })
     } catch (error) {
       res.json({ status: false, message: error.message });
     }
   }
   
   @Get('/:id', [AuthenticationMiddleware])
-  async getUser(@Response() res: IResponse, @Params('id') id: string) {
+  @Validator('idSchema')
+  async getUser(@Params('id') id: string, @Response() res: IResponse) {
     try {
-      const data: any = [id]
+      const data = await this.userService.findUser(id)
       res.json({ status: true, data });
     } catch (error) {
       res.json({ status: false, message: error.message });

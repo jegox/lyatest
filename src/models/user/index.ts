@@ -1,11 +1,11 @@
 import { model, Schema, Types, Document } from 'mongoose'
 
-export type IUser = Document & {
+type IUser = Document & {
   fullname: string;
   nickname: string;
   password: string;
   email: string;
-  isActive: boolean;
+  active: boolean;
 }
 
 const schema: Schema<IUser> = new Schema({
@@ -13,7 +13,7 @@ const schema: Schema<IUser> = new Schema({
   nickname: { type: String, required: true, trim: true, unique: true },
   password: { type: String, required: true, trim: true },
   email: {  type: String, required: true, trim: true, unique: true },
-  isActive: { type: Boolean, default: false }
+  active: { type: Boolean, default: false }
 }, { versionKey: false, timestamps: true })
 
 export const UserModel = model('User', schema)

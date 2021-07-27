@@ -15,3 +15,7 @@ export interface IUserUpdate {
   nickname: string;
   email: string;
 }
+
+export interface IUserActive {
+  active: boolean;
+}

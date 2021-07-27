@@ -15,6 +15,7 @@ export class AuthenticationMiddleware implements Middleware {
       const token = this.getToken(headers.authorization)
       try {
         const decode: any = await this.utilService.verify(token)
+        console.log({decode})
         if(typeof decode === 'object'){ 
           // request.userId = decode.userId
           next()

@@ -1,18 +1,26 @@
 import { injectable } from "tsyringe"
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import redis from 'redis'
+import JWTR from 'jwt-redis'
+
+const client = redis.createClient()
+const jwtr = new JWTR(client)
 
 @injectable()
 export class UtilService {
   constructor(){}
 
   async sign(data: any, expire?: string) {
-    return new Promise((resolve, reject) => {
-      jwt.sign(data, process.env.PRIVATE_KEY || 'S3cr3t4U@', { expiresIn: expire || '30d' }, (err, token) => {
-        if(!err) resolve(token)
-        else reject(err)
-      })
-    })
+    return await jwtr.sign(data, process.env.PRIVATE_KEY || 'S3cr3t4U@', { expiresIn: expire || '30d' })
+  }
+
+  async verify(token: any) {
+    return await jwtr.verify(token, process.env.PRIVATE_KEY || 'S3cr3t4U@')
+  }
+
+  async destroy(token: string) {
+    return await jwtr.destroy(token)
   }
 
   async compare(pass: string, hash: string){
@@ -26,14 +34,5 @@ export class UtilService {
   async encrypt(pass: any) {
     const salt = await bcrypt.genSalt(10)
     return bcrypt.hashSync(pass, salt)
-  }
-
-  async verify(token: any) {
-    return new Promise((resolve, reject) => {
-      jwt.verify(token, process.env.PRIVATE_KEY || 'S3cr3t4U@', (err: any, decode: any) => {
-        if(!err) resolve(decode)
-        else reject(err)
-      })
-    })
   }
 }
