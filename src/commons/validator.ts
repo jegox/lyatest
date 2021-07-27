@@ -1,18 +1,25 @@
 import * as DTOSchemas from '../dto'
 
-export function Validator(target: Object, propertyKey: string, descriptor: PropertyDescriptor) {
-  const originalMethod = descriptor.value
+const types = ['string', 'boolean', 'number']
+export function Validator(...params: any){
 
-  descriptor.value = async function (...args: any) {
-    const schemas: any = DTOSchemas
-    try {
-      await schemas[propertyKey+'Schema'].validate(args[0])
-      const result = originalMethod.apply(this, args)
-      return result
-    } catch (err) {
-      throw err.errors
-    }
-  };
+  return function(target: Object, propertyKey: string, descriptor: PropertyDescriptor) {
+    const originalMethod = descriptor.value
 
-  return descriptor
+    descriptor.value = async function (...args: any) {
+      const schemas: any = DTOSchemas
+      const parameters = args.slice(0, params.length)
+      try {
+        for(let i = 0; i < parameters.length; i++)
+          await schemas[params[i]].validate(parameters[i])
+
+        const result = originalMethod.apply(this, args)
+        return result
+      } catch (err) {
+        throw err.errors
+      }
+    };
+  
+    return descriptor
+  }
 }

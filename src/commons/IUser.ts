@@ -1,6 +1,17 @@
 export interface ISignup {
-  fullname: String;
-  nickname: String;
-  email: String;
-  password: String;
+  fullname: string;
+  nickname: string;
+  email: string;
+  password: string;
+}
+
+export interface ILogin {
+  email: string;
+  password: string;
+}
+
+export interface IUserUpdate {
+  fullname: string;
+  nickname: string;
+  email: string;
 }
