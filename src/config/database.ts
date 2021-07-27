@@ -5,17 +5,16 @@ export default async (fn: Function) => {
     MONGO_USERNAME,
     MONGO_PASSWORD,
     MONGO_HOSTNAME,
-    MONGO_PORT,
     MONGO_DB
   } = process.env
 
-  const URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME || '127.0.0.1'}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
+  const URL = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}/${MONGO_DB}?retryWrites=true&w=majority`
   try{
     await mongoose.connect(URL, { 
       useNewUrlParser: true ,
-      useFindAndModify: false,
-      useCreateIndex: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      // useFindAndModify: false,
+      // useCreateIndex: true
     })
     fn()
   }catch(e){
