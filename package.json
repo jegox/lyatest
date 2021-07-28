@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "dev": "MODE=development ts-node-dev --watch -- src/index.ts"
+    "dev": "MODE=development ts-node-dev --watch -- src/index.ts",
+    "mqtt": "ts-node-dev --watch -- src/services/mqtt.ts"
   },
   "devDependencies": {
     "@decorators/di": "1.0.3",
@@ -25,6 +26,7 @@
     "typescript": "4.2.4"
   },
   "dependencies": {
+    "async-mqtt": "^2.6.1",
     "axios": "^0.21.1",
     "bcryptjs": "2.4.3",
     "cors": "^2.8.5",
