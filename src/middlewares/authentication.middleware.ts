@@ -15,12 +15,11 @@ export class AuthenticationMiddleware implements Middleware {
       const token = this.getToken(headers.authorization)
       try {
         const decode: any = await this.utilService.verify(token)
-        console.log({decode})
         if(typeof decode === 'object'){ 
           request.userId = decode.userId
           next()
         }else response.status(403).json({ status: false, message: decode })
-      } catch(e) { response.status(403).json({ status: false, ...e }) }
+      } catch(e) { response.status(403).json({ status: false, message: e }) }
     }
   }
 

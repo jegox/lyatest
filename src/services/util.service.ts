@@ -10,9 +10,12 @@ const client = redis.createClient({
   password: process.env.REDIS_PASSWORD
 })
 const jwtr = new JWTR(client)
+const blackList: Array<string> = []
 
 @injectable()
 export class UtilService {
+
+  
   constructor(){}
 
   async sign(data: any, expire?: string) {
@@ -20,13 +23,13 @@ export class UtilService {
   }
 
   async verify(token: any) {
+    if(blackList.includes(token)) throw 'Token expired'
     return await jwtr.verify(token, process.env.PRIVATE_KEY || 'S3cr3t4U@')
   }
 
   async destroy(token: string) {
-    const res =  await jwtr.destroy(token)
-    console.log({res})
-    return true
+    blackList.push(token)
+    return await jwtr.destroy(token)
   }
 
   async compare(pass: string, hash: string){

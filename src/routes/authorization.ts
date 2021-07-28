@@ -29,7 +29,7 @@ export default class Authorization {
   @Delete('/', [AuthenticationMiddleware])
   async logout(@Headers('authorization') authorization: string, @Response() res: IResponse) {
     try {
-      const data: any = await this.utilService.destroy(authorization.split(' ')[0])
+      const data: any = await this.utilService.destroy(authorization.split(' ')[1])
       res.json({ status: true, data });
     } catch (error) {
       res.json({ status: false, message: error.message });
