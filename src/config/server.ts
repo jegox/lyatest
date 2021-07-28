@@ -4,6 +4,8 @@ import glob from 'glob';
 import morgan from 'morgan';
 import cors from 'cors';
 import Database from './database'
+import swaggerUI from 'swagger-ui-express'
+import swaggerDoc from './swagger.json'
 
 class Server {
   private app: Application;
@@ -32,8 +34,8 @@ class Server {
     })
 
     attachControllers(this.router, await Promise.all(routers))
+    this.app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
     this.app.use('/', this.router)
-
     this.app.use('*', (req, res) => res.status(404).json({ status: false, message: `Route ${req.originalUrl} is not found` }))
     
     this.app.use((err: any, req: any, res: any, next: any) => {
