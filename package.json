@@ -1,12 +1,11 @@
 {
-  "name": "testla",
+  "name": "lyatest",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "dev": "MODE=development ts-node-dev --watch -- src/index.ts",
-    "mqtt": "ts-node-dev --watch -- src/services/mqtt.ts"
+    "dev": "MODE=development ts-node-dev --watch -- src/index.ts"
   },
   "devDependencies": {
     "@decorators/di": "1.0.3",
