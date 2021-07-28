@@ -16,7 +16,7 @@ export class UserService {
   
       return { id: _id }
     } catch (error) {
-      return error
+      throw error
     }
   }
 
@@ -29,7 +29,7 @@ export class UserService {
   
       return await this.utilService.sign({ userId: user._id })
     } catch (error) {
-      return error
+      throw error
     }
   }
 
@@ -37,7 +37,7 @@ export class UserService {
     try {
       return await UserModel.updateOne({ _id: Types.ObjectId(id) }, { $set: fields })
     } catch (error) {
-      return error
+      throw error
     }
   }
 
@@ -45,7 +45,7 @@ export class UserService {
     try {
       return await UserModel.deleteOne({ _id: Types.ObjectId(id) })
     } catch (error) {
-      return error
+      throw error
     }
   }
 
@@ -53,7 +53,7 @@ export class UserService {
     try {
       return await UserModel.findOne({ _id: Types.ObjectId(id), active: true }, { password: 0 })
     } catch (error) {
-      return error
+      throw error
     }
   }
 }

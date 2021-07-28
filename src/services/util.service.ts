@@ -1,10 +1,14 @@
 import { injectable } from "tsyringe"
-import jwt from 'jsonwebtoken'
+// import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import redis from 'redis'
 import JWTR from 'jwt-redis'
 
-const client = redis.createClient()
+const client = redis.createClient({
+  host: process.env.REDIS_HOSTNAME,
+  port: parseInt(process.env.REDIS_PORT || '0'),
+  password: process.env.REDIS_PASSWORD
+})
 const jwtr = new JWTR(client)
 
 @injectable()
@@ -20,7 +24,9 @@ export class UtilService {
   }
 
   async destroy(token: string) {
-    return await jwtr.destroy(token)
+    const res =  await jwtr.destroy(token)
+    console.log({res})
+    return true
   }
 
   async compare(pass: string, hash: string){

@@ -11,7 +11,7 @@ export class FactService {
       const { data } = await Axios.get('https://catfact.ninja/fact')
       return data.fact
     } catch (error) {
-      return error
+      throw error
     }
   }
 }
